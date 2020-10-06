@@ -3,13 +3,12 @@
 
 import React from 'react'
 
-import {useLocalStorageState} from '../utils';
-
-
 function Board() {
   // 🐨 squares is the state for this component. Add useState for squares
   // const squares = Array(9).fill(null)
-  const [squares,setSquares] = useLocalStorageState('squares',Array(9).fill(null));  
+  const [squares,setSquares] = React.useState(() => {
+   return window.localStorage.getItem('squares') ? window.localStorage.getItem('squares').split(',') :  Array(9).fill(null)
+  });
   // 🐨 We'll need the following bits of derived state:
   // - nextValue ('X' or 'O')
   // - winner ('X', 'O', or null)
@@ -44,8 +43,7 @@ function Board() {
     squaresCopy[square] = nextValue;
     // 🐨 set the squares to your copy
     setSquares(squaresCopy);
-    // window.localStorage.setItem('squares',JSON.stringify(squares));
-    
+    window.localStorage.setItem('squares',squares);
     // const calcNextValue = calculateNextValue(squaresCopy);
     // setNextValue(calcNextValue);
     // const calcWinner = calculateWinner(squaresCopy);
@@ -54,7 +52,7 @@ function Board() {
   }
 
   React.useEffect(() => {
-   window.localStorage.setItem('squares',JSON.stringify(squares)); 
+   window.localStorage.setItem('squares',squares); 
   },[squares])
 
   function restart() {
